@@ -1,96 +1,105 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
-	<meta charset="UTF-8">
-	<title>随机小球运动</title>
-	<style type="text/css">
-	*{
-		margin: 0px;
-		padding: 0px;
-	}
-	html,body{
-		height: 100%;
-		width: 100%;
-		overflow: hidden; /*隐藏滚动条，消除小球碰到滚动条出现的窗口闪动*/
-	}
-	.content{
-		width: 100%;
-		height: 100%;
-		position: relative;
-		background: black;
- 
-	}
-	.ball{
-		position: absolute;
-		border-radius: 50%;
-	}
-	</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>随机小球运动</title>
+    <style>
+        div {
+            position: relative;
+            width: 500px;
+            height: 300px;
+            border: 1px solid #ff0000;
+            overflow: hidden; /*隐藏滚动条，消除小球碰到滚动条出现的窗口闪动*/
+        }
+    </style>
+   
 </head>
+
 <body>
-	<div class="content" id="con"></div>
-	<script type="text/javascript">
-	//定义随机函数
-	function RandomNum(num1,num2){
-		return Math.floor(Math.random()*(num2-num1+1)+num1);
- 
-	}
-	//构造小球函数
-	function Ball(){
-		this.ball=document.createElement("div");
-		var randomNum=RandomNum(20,50);
-		this.width=randomNum
-		this.height=randomNum
-		//如果元素有id名，我们可以直接使用，不用document.get....获取
-		this.left=RandomNum(0,con.offsetWidth-randomNum);
-		this.top=RandomNum(0,con.offsetHeight-randomNum);
-		this.backgroundColor="rgba("+RandomNum(0,255)+","+RandomNum(0,255)+","+RandomNum(0,255)+","+Math.random()+")";//随机颜色
-		this.tempX=this.left;
-		this.tempY=this.top;
-		this.speedx=RandomNum(10,20)-15.5;//后面的小数是保证随机产生的方向有正有负
-		this.speedy=RandomNum(10,20)-15.5;
-	}
-	//画小球的方法
-	Ball.prototype.draw=function(){
-		this.ball.style.width=this.width+"px";
-		this.ball.style.height=this.height+"px";
-		this.ball.className="ball";
-		this.ball.style.left=this.tempX+"px";
-		this.ball.style.top=this.tempY+"px";
-		this.ball.style.backgroundColor=this.backgroundColor;
-		con.appendChild(this.ball);
-	}
-	
- 
-	//运动函数
-	Ball.prototype.move=function(){
- 
-		this.tempX=this.tempX+this.speedx;	
-		this.tempY=this.tempY+this.speedy;
-	 // 判断临界值
-	    if(this.tempX+this.width>=document.body.clientWidth||this.tempX<=0){
-	        this.speedx = -this.speedx;//改变方向
-	    }
-	    if(this.tempY+this.height>=document.body.clientHeight||this.tempY<=0) {
-	        this.speedy = -this.speedy;
-	    }
-		 this.draw();
-	}
-	//产生小球
-	var balls=[];
-	for(var i=0;i<100;i++){
-		var ball=new Ball();
-		balls.push(ball);//生成的小球对象放进数组
-			
-	}
-	function start(){
-	 	for(var i = 0;i < balls.length;i++) { 
-	  	balls[i].move();
-	 } 
-	}
-	window.onload=function(){
-		setInterval(start,10);//设置定时器
-	}
- 
-	</script>
+    <div id="box">
+        
+    </div>
+    <script>
+            console.log(Math.random());
+            var box = document.getElementById("box");
+    
+            //文档片段
+            var fragment = document.createDocumentFragment();
+            for (var i = 0, len = Math.random() * 100; i < len; i++) {
+                //生成小球
+                var ball = document.createElement("div");
+    
+                //大小
+                var width = Math.random() * 30 + 1 + "px";
+                var height = width;
+                
+                //颜色
+                var r = Math.random() * 256;
+                var g = Math.random() * 256;
+                var b = Math.random() * 256;
+    
+                //位置
+                var l = parseInt(Math.random()*470) + "px";
+                var t = parseInt(Math.random()*270)+ "px";
+              
+    
+                ball.style = "position:absolute;left:"+l+";top:"+t+";width:"+width+";height:"+height+";border-radius:50%;background:rgb(" + r + "," + g + "," + b + ")";
+                console.log(ball);
+                ball.setAttribute("class", "ball");
+                fragment.appendChild(ball);
+            }
+    
+            box.appendChild(fragment);
+    
+    
+            var balls = document.querySelectorAll(".ball");
+            balls.forEach(function (item, index) {
+                console.log(item);
+                //随机一个沿着x轴移动的初始值
+                var speedX = parseInt(Math.random() * 10 + 1);
+                //console.log(speedX);
+                //随机一个沿着y轴移动的初始值
+                var speedY = parseInt(Math.random() * 10 + 1);
+                //console.log(speedY);
+                //获得当前小球的left值
+                var nowLeft = item.offsetLeft;
+                //获得当前小球的top值
+                var nowTop = item.offsetTop;
+                console.log(nowLeft, nowTop);
+                //获得小球x轴最大的移动距离
+                var maxWidth = box.offsetWidth - item.offsetWidth;
+                //console.log(maxWidth);
+                //获得小球y轴最大的移动距离
+                var maxHeight = box.offsetHeight - item.offsetHeight;
+                //console.log(maxHeight);
+                setInterval(function () {
+                    nowLeft += speedX;
+                    nowTop += speedY;
+                    if (nowLeft >= maxWidth) {
+                        speedX = -speedX;
+                    }
+                    if (nowLeft <= 0) {
+                        speedX = -speedX;
+                    }
+                    if (nowTop >= maxHeight) {
+                        speedY = -speedY;
+                    }
+                    if (nowTop <= 0) {
+                        speedY = -speedY;
+                    }
+    
+                    item.style.left = nowLeft + "px";
+    
+                    item.style.top = nowTop + "px";
+                }, 30)
+            })
+    
+    
+    
+        </script>
 </body>
+
 </html>
