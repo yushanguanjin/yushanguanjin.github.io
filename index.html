@@ -146,16 +146,16 @@
         
         let arr = str.split('');
         console.log(arr);
-        let i = 0;
+        let j = 0;
 
 
         function print() {
-            if (i <= arr.length - 1) {
+            if (j <= arr.length - 1) {
                 console.log(arr[i]);
                 document.getElementsByClassName('text')[0].innerText = document.getElementsByClassName('text')[0].innerText + arr[i];
                 console.log(document.getElementsByClassName('text')[0].innerText);
             }
-            i++;
+            j++;
         }
 
         setInterval(print, 100);
